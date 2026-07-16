@@ -7,6 +7,7 @@ import OverviewPage from "@/pages/Overview";
 import AlertsPage from "@/pages/Alerts";
 import TelemetryPage from "@/pages/Telemetry";
 import TransactionsPage from "@/pages/Transactions";
+import BehavioralPage from "@/pages/Behavioral";
 
 function DashboardLayout() {
   return (
@@ -17,6 +18,7 @@ function DashboardLayout() {
           <Route path="/alerts" element={<AlertsPage />} />
           <Route path="/telemetry" element={<TelemetryPage />} />
           <Route path="/transactions" element={<TransactionsPage />} />
+          <Route path="/behavioral" element={<BehavioralPage />} />
           <Route path="*" element={<Navigate to="/overview" replace />} />
         </Routes>
       </AppShell>
