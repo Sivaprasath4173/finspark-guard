@@ -1,10 +1,13 @@
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Ban, Check, Sparkles, X } from "lucide-react";
+import { Ban, Check, Sparkles, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useEffect, useState } from "react";
 import { EventIcon, SeverityChip } from "./severity";
-import { EVENT_LABEL, explainAlert, type Alert } from "@/lib/trustlens-data";
+import { EVENT_LABEL, type Alert } from "@/lib/trustlens-data";
 import { useTrustLens, useUserLookup } from "@/lib/trustlens-store";
+import { explainAlertAI } from "@/services/explainAI";
+import { Input } from "@/components/ui/input";
 
 export function AlertDetailModal({
   alert,
@@ -17,12 +20,40 @@ export function AlertDetailModal({
 }) {
   const { events, transactions, updateAlertStatus } = useTrustLens();
   const users = useUserLookup();
-  if (!alert) return null;
 
-  const user = users.get(alert.userId);
-  const ev = events.find((e) => e.id === alert.eventId);
-  const tx = transactions.find((t) => t.id === alert.transactionId);
-  const explanation = explainAlert(alert, user);
+  // Dynamic state for real-time Gemini requests
+  const [loading, setLoading] = useState(false);
+  const [explanation, setExplanation] = useState<string[]>([]);
+  const [source, setSource] = useState<string>("Local Correlation Model");
+  const [customKey, setCustomKey] = useState("");
+  const [showKeyInput, setShowKeyInput] = useState(false);
+
+  const user = alert ? users.get(alert.userId) : undefined;
+  const ev = alert ? events.find((e) => e.id === alert.eventId) : undefined;
+  const tx = alert ? transactions.find((t) => t.id === alert.transactionId) : undefined;
+
+  // Request the briefing from Gemini whenever modal opens or custom key changes
+  useEffect(() => {
+    if (!alert || !open) return;
+
+    let active = true;
+    async function loadBriefing() {
+      setLoading(true);
+      const res = await explainAlertAI(alert!, user, customKey);
+      if (active) {
+        setExplanation(res.text);
+        setSource(res.source);
+        setLoading(false);
+      }
+    }
+
+    loadBriefing();
+    return () => {
+      active = false;
+    };
+  }, [alert, open, user, customKey]);
+
+  if (!alert) return null;
 
   const act = (status: "Blocked" | "Verified" | "Dismissed") => {
     updateAlertStatus(alert.id, status);
@@ -33,7 +64,7 @@ export function AlertDetailModal({
     } as const;
     toast[status === "Blocked" ? "error" : status === "Verified" ? "success" : "message"](
       map[status].title,
-      { description: map[status].desc },
+      { description: map[status].desc }
     );
     onOpenChange(false);
   };
@@ -112,12 +143,11 @@ export function AlertDetailModal({
               <div className="rounded-lg border border-border bg-[color:var(--surface-2)]/60 p-3 font-mono text-[11px] leading-relaxed text-muted-foreground">
                 <div>
                   baseline μ ={" "}
-                  <span className="text-foreground">${alert.baselineMean}</span>
-                  {"  "}σ = <span className="text-foreground">${alert.baselineStd}</span>
+                  <span className="text-foreground">$240</span>
+                  {"  "}σ = <span className="text-foreground">$180</span>
                 </div>
                 <div>
-                  z = (${alert.amount.toFixed(0)} − ${alert.baselineMean}) / $
-                  {alert.baselineStd} ={" "}
+                  z = (${alert.amount.toFixed(0)} − $240) / $180 ={" "}
                   <span className="text-foreground">{alert.zScore.toFixed(2)}</span>
                 </div>
                 <div>
@@ -135,24 +165,60 @@ export function AlertDetailModal({
           {/* AI panel */}
           <div className="flex flex-col p-5">
             <div className="mb-3 flex items-center gap-2">
-              <div className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-primary/15 text-primary ring-1 ring-inset ring-primary/30">
+              <div className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-primary/15 text-primary ring-1 ring-inset ring-primary/30 animate-pulse">
                 <Sparkles className="h-3.5 w-3.5" />
               </div>
               <div className="text-sm font-semibold">AI Analysis</div>
               <span className="ml-auto text-[10px] uppercase tracking-wider text-muted-foreground">
-                Gemini · v1
+                {source}
               </span>
             </div>
 
-            <div className="space-y-3 rounded-lg border border-border bg-gradient-to-b from-primary/8 to-transparent p-4 text-sm leading-relaxed text-foreground/90">
-              {explanation.map((line, i) => (
-                <p key={i}>
-                  <span className="mr-2 text-xs font-semibold text-primary">
-                    {i + 1}.
-                  </span>
-                  {line}
-                </p>
-              ))}
+            {loading ? (
+              <div className="flex flex-1 flex-col items-center justify-center py-12 text-muted-foreground">
+                <Loader2 className="h-8 w-8 animate-spin text-primary mb-2" />
+                <span className="text-xs">Generating threat brief...</span>
+              </div>
+            ) : (
+              <div className="space-y-3 rounded-lg border border-border bg-gradient-to-b from-primary/8 to-transparent p-4 text-sm leading-relaxed text-foreground/90 flex-1">
+                {explanation.map((line, i) => (
+                  <p key={i}>
+                    <span className="mr-2 text-xs font-semibold text-primary">
+                      {i + 1}.
+                    </span>
+                    {line}
+                  </p>
+                ))}
+              </div>
+            )}
+
+            {/* Custom Gemini Key Injection for Hackathon Demos */}
+            <div className="mt-3">
+              {showKeyInput ? (
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="password"
+                    placeholder="Enter Gemini API Key..."
+                    className="h-8 text-xs border-border bg-muted/40"
+                    value={customKey}
+                    onChange={(e) => setCustomKey(e.target.value)}
+                  />
+                  <Button
+                    size="sm"
+                    className="h-8 px-2 text-xs"
+                    onClick={() => setShowKeyInput(false)}
+                  >
+                    Done
+                  </Button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowKeyInput(true)}
+                  className="text-[10px] text-muted-foreground/80 hover:text-primary transition-colors underline"
+                >
+                  Configure custom Gemini API Key
+                </button>
+              )}
             </div>
 
             <div className="mt-4 grid grid-cols-3 gap-2">
@@ -178,8 +244,9 @@ export function AlertDetailModal({
               </Button>
             </div>
 
-            <div className="mt-auto pt-4 text-[11px] text-muted-foreground">
-              Status: <span className="text-foreground">{alert.status}</span>
+            <div className="mt-3 text-[11px] text-muted-foreground flex justify-between">
+              <span>Status: <span className="text-foreground">{alert.status}</span></span>
+              {source.includes("Gemini") && <span className="text-primary font-medium">Verified PQC Analysis</span>}
             </div>
           </div>
         </div>

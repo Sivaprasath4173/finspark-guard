@@ -20,6 +20,13 @@ import {
 interface TrustLensContextValue extends Dataset {
   updateAlertStatus: (id: string, status: AlertStatus) => void;
   liveTick: number;
+  // Dynamic Hackathon Controls
+  zThreshold: number;
+  setZThreshold: (z: number) => void;
+  timeWindow: number;
+  setTimeWindow: (minutes: number) => void;
+  pqcActive: boolean;
+  setPqcActive: (active: boolean) => void;
 }
 
 const TrustLensContext = createContext<TrustLensContextValue | null>(null);
@@ -28,6 +35,11 @@ export function TrustLensProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<Dataset>(() => buildDataset());
   const [liveTick, setLiveTick] = useState(0);
   const counter = useRef(0);
+
+  // Hackathon State
+  const [zThreshold, setZThreshold] = useState(1.2);
+  const [timeWindow, setTimeWindow] = useState(90);
+  const [pqcActive, setPqcActive] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -39,7 +51,7 @@ export function TrustLensProvider({ children }: { children: ReactNode }) {
         setData((prev) => {
           const ev: TelemetryEvent = makeLiveEvent(prev.users, counter.current);
           const events = [ev, ...prev.events].slice(0, 400);
-          // ~30% chance to also produce a correlated alert
+          
           let alerts = prev.alerts;
           if (Math.random() < 0.35) {
             const alert: Alert = makeLiveAlert(prev.users, ev);
@@ -59,10 +71,38 @@ export function TrustLensProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  // Filter alerts & transactions based on tuning parameters
+  const filteredData = useMemo(() => {
+    let baseAlerts = data.alerts;
+    
+    // Filter alerts by dynamically matching Z-Score and Proximity window
+    baseAlerts = baseAlerts.filter(
+      (a) => Math.abs(a.zScore) >= zThreshold && a.proximityMinutes <= timeWindow
+    );
+
+    // If PQC active, adjust quantum risks to false (all migration completed)
+    const baseTransactions = data.transactions.map((tx) => ({
+      ...tx,
+      quantumRisk: pqcActive ? false : tx.quantumRisk,
+    }));
+
+    return {
+      ...data,
+      alerts: baseAlerts,
+      transactions: baseTransactions,
+    };
+  }, [data, zThreshold, timeWindow, pqcActive]);
+
   const value = useMemo<TrustLensContextValue>(
     () => ({
-      ...data,
+      ...filteredData,
       liveTick,
+      zThreshold,
+      setZThreshold,
+      timeWindow,
+      setTimeWindow,
+      pqcActive,
+      setPqcActive,
       updateAlertStatus: (id, status) => {
         setData((prev) => ({
           ...prev,
@@ -70,7 +110,7 @@ export function TrustLensProvider({ children }: { children: ReactNode }) {
         }));
       },
     }),
-    [data, liveTick],
+    [filteredData, liveTick, zThreshold, timeWindow, pqcActive]
   );
 
   return (
