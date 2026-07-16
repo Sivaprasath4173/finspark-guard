@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /overview
+Disallow: /alerts
+Disallow: /telemetry
+Disallow: /transactions
