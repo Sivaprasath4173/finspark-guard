@@ -1,0 +1,72 @@
+[
+  {
+    "id": "u_000",
+    "name": "Alex Reyes",
+    "accountId": "ACCT-47291",
+    "homeLocation": "New York, US",
+    "tier": "Gold"
+  },
+  {
+    "id": "u_001",
+    "name": "Jordan Park",
+    "accountId": "ACCT-83104",
+    "homeLocation": "London, UK",
+    "tier": "Standard"
+  },
+  {
+    "id": "u_002",
+    "name": "Priya Nakamura",
+    "accountId": "ACCT-56782",
+    "homeLocation": "Singapore, SG",
+    "tier": "Platinum"
+  },
+  {
+    "id": "u_003",
+    "name": "Marcus Silva",
+    "accountId": "ACCT-19047",
+    "homeLocation": "Toronto, CA",
+    "tier": "Standard"
+  },
+  {
+    "id": "u_004",
+    "name": "Sofia Khan",
+    "accountId": "ACCT-72358",
+    "homeLocation": "Dubai, AE",
+    "tier": "Private"
+  },
+  {
+    "id": "u_005",
+    "name": "Yuki Ivanov",
+    "accountId": "ACCT-33916",
+    "homeLocation": "Tokyo, JP",
+    "tier": "Gold"
+  },
+  {
+    "id": "u_006",
+    "name": "Diego Chen",
+    "accountId": "ACCT-60421",
+    "homeLocation": "Mexico City, MX",
+    "tier": "Standard"
+  },
+  {
+    "id": "u_007",
+    "name": "Nadia Okafor",
+    "accountId": "ACCT-88203",
+    "homeLocation": "Lagos, NG",
+    "tier": "Standard"
+  },
+  {
+    "id": "u_008",
+    "name": "Ravi Weiss",
+    "accountId": "ACCT-14579",
+    "homeLocation": "Mumbai, IN",
+    "tier": "Gold"
+  },
+  {
+    "id": "u_009",
+    "name": "Emma Torres",
+    "accountId": "ACCT-95641",
+    "homeLocation": "Berlin, DE",
+    "tier": "Platinum"
+  }
+]

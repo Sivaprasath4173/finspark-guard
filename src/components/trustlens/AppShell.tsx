@@ -1,4 +1,5 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useLocation } from "react-router-dom";
+import { TrustLensLogo } from "@/components/TrustLensLogo";
 import {
   Activity,
   Bell,
@@ -33,7 +34,7 @@ const NAV = [
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const pathname = useRouterState({ select: (r) => r.location.pathname });
+  const { pathname } = useLocation();
   const { alerts } = useTrustLens();
   const openCritical = alerts.filter((a) => a.status === "Open" && a.severity === "Critical").length;
   const openHigh = alerts.filter((a) => a.status === "Open" && a.severity === "High").length;
@@ -50,9 +51,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         )}
       >
         <div className="flex h-14 items-center gap-2 border-b border-border px-4">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary/15 ring-1 ring-inset ring-primary/40">
-            <Activity className="h-4 w-4 text-primary" />
-          </div>
+          <TrustLensLogo size={28} />
           <div className="flex flex-col leading-tight">
             <span className="text-sm font-semibold tracking-tight">TrustLens</span>
             <span className="text-[10px] uppercase tracking-wider text-muted-foreground">

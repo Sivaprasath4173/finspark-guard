@@ -1,0 +1,82 @@
+[
+  {
+    "id": "x_0000",
+    "userId": "u_004",
+    "amount": 28450.00,
+    "merchant": "Wire Transfer",
+    "channel": "wire",
+    "location": "Dubai, AE",
+    "timestamp": 1752624300000,
+    "quantumRisk": true
+  },
+  {
+    "id": "x_0001",
+    "userId": "u_002",
+    "amount": 12800.50,
+    "merchant": "Bitfinex",
+    "channel": "online",
+    "location": "Singapore, SG",
+    "timestamp": 1752621000000,
+    "quantumRisk": false
+  },
+  {
+    "id": "x_0002",
+    "userId": "u_001",
+    "amount": 4320.75,
+    "merchant": "Western Union",
+    "channel": "wire",
+    "location": "London, UK",
+    "timestamp": 1752617400000,
+    "quantumRisk": true
+  },
+  {
+    "id": "x_0003",
+    "userId": "u_000",
+    "amount": 389.00,
+    "merchant": "Amazon",
+    "channel": "online",
+    "location": "New York, US",
+    "timestamp": 1752613800000,
+    "quantumRisk": false
+  },
+  {
+    "id": "x_0004",
+    "userId": "u_007",
+    "amount": 156.20,
+    "merchant": "Shell",
+    "channel": "POS",
+    "location": "Lagos, NG",
+    "timestamp": 1752610200000,
+    "quantumRisk": false
+  },
+  {
+    "id": "x_0005",
+    "userId": "u_009",
+    "amount": 45000.00,
+    "merchant": "Wire Transfer",
+    "channel": "wire",
+    "location": "Berlin, DE",
+    "timestamp": 1752606600000,
+    "quantumRisk": true
+  },
+  {
+    "id": "x_0006",
+    "userId": "u_003",
+    "amount": 820.40,
+    "merchant": "Delta Airlines",
+    "channel": "online",
+    "location": "Toronto, CA",
+    "timestamp": 1752603000000,
+    "quantumRisk": false
+  },
+  {
+    "id": "x_0007",
+    "userId": "u_005",
+    "amount": 67.50,
+    "merchant": "Starbucks",
+    "channel": "ATM",
+    "location": "Tokyo, JP",
+    "timestamp": 1752599400000,
+    "quantumRisk": false
+  }
+]
