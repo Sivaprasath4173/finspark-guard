@@ -108,7 +108,7 @@ export default function OverviewPage() {
                 <span className="h-2 w-2 rounded-full bg-primary" /> Risk
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-[color:var(--critical)]" />{" "}
+                <span className="h-2 w-2 rounded-full bg-[color:var(--accent)]" />{" "}
                 Alerts
               </span>
             </div>
@@ -122,8 +122,8 @@ export default function OverviewPage() {
                     <stop offset="100%" stopColor="var(--primary)" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="alertGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--critical)" stopOpacity={0.4} />
-                    <stop offset="100%" stopColor="var(--critical)" stopOpacity={0} />
+                    <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.4} />
+                    <stop offset="100%" stopColor="var(--accent)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid stroke="var(--border)" strokeDasharray="2 4" vertical={false} />
@@ -139,7 +139,7 @@ export default function OverviewPage() {
                   labelStyle={{ color: "var(--muted-foreground)" }}
                 />
                 <Area type="monotone" dataKey="risk" stroke="var(--primary)" strokeWidth={2} fill="url(#riskGrad)" />
-                <Area type="monotone" dataKey="alerts" stroke="var(--critical)" strokeWidth={1.5} fill="url(#alertGrad)" />
+                <Area type="monotone" dataKey="alerts" stroke="var(--accent)" strokeWidth={1.5} fill="url(#alertGrad)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>

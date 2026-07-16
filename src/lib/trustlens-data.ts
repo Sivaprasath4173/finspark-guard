@@ -183,10 +183,20 @@ export function scoreCorrelation(
   const proximityMin = proximityMs / 60_000;
   if (proximityMin > 90) return null;
   const z = (tx.amount - BASELINE_MEAN) / BASELINE_STD;
-  const proximityBonus = Math.max(0, (90 - proximityMin) / 90) * 25;
-  const weight = EVENT_WEIGHTS[ev.type];
-  const raw = weight * 12 + Math.max(0, z) * 10 + proximityBonus;
-  const risk = Math.max(4, Math.min(99, Math.round(raw)));
+  
+  const baseScoreMap: Record<EventType, number> = {
+    failed_login: 30,
+    new_device: 40,
+    tor_ip: 50,
+    impossible_travel: 55,
+    malware_beacon: 65,
+  };
+  const base = baseScoreMap[ev.type];
+  const zContribution = z > 0 ? Math.min(24, Math.log1p(z) * 6) : 0;
+  const proximityBonus = Math.max(0, (90 - proximityMin) / 90) * 10;
+  
+  const raw = base + zContribution + proximityBonus;
+  const risk = Math.max(35, Math.min(99, Math.round(raw)));
   return { risk, z, proximityMin };
 }
 
@@ -232,7 +242,6 @@ function buildAlerts(
     }
   }
   candidates.sort((a, b) => b.riskScore - a.riskScore);
-  // Aim for ~18 alerts with a good severity mix.
   const top = candidates.slice(0, 18);
   return top.sort((a, b) => b.timestamp - a.timestamp);
 }
@@ -274,7 +283,20 @@ export function makeLiveAlert(
 ): Alert {
   const amount = Math.round((randInt(500, 12000) + rng()) * 100) / 100;
   const z = (amount - BASELINE_MEAN) / BASELINE_STD;
-  const risk = Math.max(35, Math.min(99, Math.round(EVENT_WEIGHTS[ev.type] * 14 + z * 8 + 20)));
+  
+  const baseScoreMap: Record<EventType, number> = {
+    failed_login: 30,
+    new_device: 40,
+    tor_ip: 50,
+    impossible_travel: 55,
+    malware_beacon: 65,
+  };
+  const base = baseScoreMap[ev.type];
+  const zContribution = z > 0 ? Math.min(24, Math.log1p(z) * 6) : 0;
+  const proximityMin = Math.round(rng() * 40 * 10) / 10;
+  const proximityBonus = Math.max(0, (90 - proximityMin) / 90) * 10;
+  
+  const risk = Math.max(35, Math.min(99, Math.round(base + zContribution + proximityBonus)));
   return {
     id: `al_${Date.now()}`,
     userId: ev.userId,
@@ -289,8 +311,7 @@ export function makeLiveAlert(
     zScore: Math.round(z * 100) / 100,
     baselineMean: BASELINE_MEAN,
     baselineStd: BASELINE_STD,
-    proximityMinutes: Math.round(rng() * 40 * 10) / 10,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    proximityMinutes: proximityMin,
   } as Alert;
 }
 

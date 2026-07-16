@@ -85,13 +85,6 @@ export function AlertDetailModal({
               </div>
             </div>
           </div>
-          <button
-            onClick={() => onOpenChange(false)}
-            className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
-            aria-label="Close"
-          >
-            <X className="h-4 w-4" />
-          </button>
         </div>
 
         <div className="grid gap-0 md:grid-cols-2">

@@ -60,7 +60,7 @@ export default function TransactionsPage() {
               <button
                 onClick={() => setPqcActive(!pqcActive)}
                 className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  pqcActive ? "bg-[color:var(--low)]" : "bg-muted"
+                  pqcActive ? "bg-[color:var(--accent)]" : "bg-muted"
                 }`}
               >
                 <span

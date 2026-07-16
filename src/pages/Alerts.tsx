@@ -72,7 +72,7 @@ export default function AlertsPage() {
             <div className="space-y-1.5 min-w-[150px]">
               <div className="flex justify-between text-xs font-mono">
                 <span className="text-muted-foreground">Min Z-Score:</span>
-                <span className="text-primary font-bold">{zThreshold.toFixed(1)}σ</span>
+                <span className="text-[color:var(--accent)] font-bold">{zThreshold.toFixed(1)}σ</span>
               </div>
               <input
                 type="range"
@@ -81,7 +81,7 @@ export default function AlertsPage() {
                 step="0.1"
                 value={zThreshold}
                 onChange={(e) => setZThreshold(parseFloat(e.target.value))}
-                className="w-full h-1 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
+                className="w-full h-1 bg-muted rounded-lg appearance-none cursor-pointer accent-[color:var(--accent)]"
               />
             </div>
 
@@ -89,7 +89,7 @@ export default function AlertsPage() {
             <div className="space-y-1.5 min-w-[150px]">
               <div className="flex justify-between text-xs font-mono">
                 <span className="text-muted-foreground">Coincidence:</span>
-                <span className="text-primary font-bold">{timeWindow} mins</span>
+                <span className="text-[color:var(--accent)] font-bold">{timeWindow} mins</span>
               </div>
               <input
                 type="range"
@@ -98,18 +98,18 @@ export default function AlertsPage() {
                 step="5"
                 value={timeWindow}
                 onChange={(e) => setTimeWindow(parseInt(e.target.value))}
-                className="w-full h-1 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
+                className="w-full h-1 bg-muted rounded-lg appearance-none cursor-pointer accent-[color:var(--accent)]"
               />
             </div>
 
             {/* Realtime Impact Stat */}
             <div className="bg-muted/40 rounded-lg p-2 flex items-center gap-2 border border-border/80 min-w-[140px]">
-              <div className="rounded bg-primary/15 p-1 text-primary">
+              <div className="rounded bg-[color:var(--accent)]/15 p-1 text-[color:var(--accent)]">
                 <Percent className="h-4 w-4" />
               </div>
               <div>
                 <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Noise reduction</div>
-                <div className="text-sm font-bold font-mono text-primary">{noiseReduction}%</div>
+                <div className="text-sm font-bold font-mono text-[color:var(--accent)]">{noiseReduction}%</div>
               </div>
             </div>
           </div>

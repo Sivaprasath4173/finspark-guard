@@ -48,57 +48,66 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  /* Font Family Definitions */
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Merriweather", Georgia, serif;
 }
 
 :root {
   --radius: 0.5rem;
   /* Enterprise SOC dark theme */
-  --background: oklch(0.14 0.008 260);
+  --background: oklch(0.12 0.005 260); /* Near-black/dark */
   --foreground: oklch(0.96 0.005 260);
-  --surface-1: oklch(0.17 0.008 260);
-  --surface-2: oklch(0.21 0.01 260);
-  --card: oklch(0.17 0.008 260);
+  --surface-1: oklch(0.15 0.005 260);
+  --surface-2: oklch(0.18 0.008 260);
+  --card: oklch(0.15 0.005 260);
   --card-foreground: oklch(0.96 0.005 260);
-  --popover: oklch(0.18 0.008 260);
+  --popover: oklch(0.16 0.005 260);
   --popover-foreground: oklch(0.96 0.005 260);
-  --primary: oklch(0.62 0.21 275);
-  --primary-foreground: oklch(0.99 0.003 260);
-  --secondary: oklch(0.24 0.012 260);
-  --secondary-foreground: oklch(0.96 0.005 260);
-  --muted: oklch(0.22 0.01 260);
-  --muted-foreground: oklch(0.66 0.015 260);
-  --accent: oklch(0.28 0.05 275);
-  --accent-foreground: oklch(0.98 0.005 260);
-  --destructive: oklch(0.63 0.24 25);
-  --destructive-foreground: oklch(0.98 0.003 260);
-  --border: oklch(0.27 0.01 260);
-  --input: oklch(0.24 0.01 260);
-  --ring: oklch(0.62 0.21 275);
 
-  --critical: oklch(0.63 0.24 25);
+  /* Primary Accent: Deep Maroon (#8B1E3F) */
+  --primary: oklch(0.38 0.17 12);
+  --primary-foreground: oklch(0.99 0.003 260);
+  --ring: oklch(0.38 0.17 12);
+
+  /* Secondary Accent: Warm Gold/Saffron (#D4A017) */
+  --accent: oklch(0.72 0.18 80);
+  --accent-foreground: oklch(0.12 0.005 260);
+
+  /* Status Colors */
+  --critical: oklch(0.65 0.25 35); /* Brighter red-orange to be highly distinct from brand maroon */
   --high: oklch(0.72 0.18 55);
   --medium: oklch(0.82 0.16 95);
   --low: oklch(0.72 0.18 145);
 
-  --chart-1: oklch(0.62 0.21 275);
-  --chart-2: oklch(0.72 0.18 145);
+  /* Chart Colors (Maroon & Gold lines/areas) */
+  --chart-1: oklch(0.38 0.17 12); /* Maroon */
+  --chart-2: oklch(0.72 0.18 80); /* Gold */
   --chart-3: oklch(0.82 0.16 95);
   --chart-4: oklch(0.72 0.18 55);
-  --chart-5: oklch(0.63 0.24 25);
+  --chart-5: oklch(0.65 0.25 35);
 
-  --sidebar: oklch(0.13 0.008 260);
+  --secondary: oklch(0.22 0.008 260);
+  --secondary-foreground: oklch(0.96 0.005 260);
+  --muted: oklch(0.20 0.008 260);
+  --muted-foreground: oklch(0.66 0.015 260);
+  --border: oklch(0.24 0.008 260);
+  --input: oklch(0.22 0.008 260);
+
+  /* Sidebar styling matching brand */
+  --sidebar: oklch(0.11 0.005 260);
   --sidebar-foreground: oklch(0.9 0.005 260);
-  --sidebar-primary: oklch(0.62 0.21 275);
+  --sidebar-primary: oklch(0.38 0.17 12);
   --sidebar-primary-foreground: oklch(0.99 0.003 260);
-  --sidebar-accent: oklch(0.22 0.012 260);
+  --sidebar-accent: oklch(0.18 0.008 260);
   --sidebar-accent-foreground: oklch(0.96 0.005 260);
-  --sidebar-border: oklch(0.24 0.01 260);
-  --sidebar-ring: oklch(0.62 0.21 275);
+  --sidebar-border: oklch(0.20 0.008 260);
+  --sidebar-ring: oklch(0.38 0.17 12);
 }
 
 .dark {
-  --background: oklch(0.14 0.008 260);
+  --background: oklch(0.12 0.005 260);
   --foreground: oklch(0.96 0.005 260);
 }
 
@@ -111,6 +120,10 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    letter-spacing: -0.02em;
   }
 }
 
@@ -141,7 +154,7 @@
   background-image:
     radial-gradient(circle at 20% 20%, color-mix(in oklab, var(--primary) 22%, transparent), transparent 45%),
     radial-gradient(circle at 80% 70%, color-mix(in oklab, var(--primary) 15%, transparent), transparent 50%),
-    linear-gradient(to bottom right, oklch(0.11 0.01 260), oklch(0.15 0.02 275));
+    linear-gradient(to bottom right, oklch(0.10 0.005 260), oklch(0.14 0.01 275));
 }
 @utility tl-node-grid {
   background-image:
