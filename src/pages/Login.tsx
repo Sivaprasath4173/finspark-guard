@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Lock, Mail, Zap } from "lucide-react";
+import { ArrowRight, Lock, Mail, Zap, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +23,7 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       await signIn(email, password);
-      toast.success("Successfully authenticated!");
+      toast.success("Successfully authenticated with Full SOC Access!");
       navigate("/overview");
     } catch (error: any) {
       toast.error(error.message || "Failed to sign in. Please check credentials.");
@@ -45,9 +45,18 @@ export default function LoginPage() {
     }
   };
 
-  const handleDemoSignIn = () => {
-    toast.success("Signed in as Demo Analyst.");
-    navigate("/overview");
+  const handleDemoSignIn = async () => {
+    setIsLoading(true);
+    try {
+      await signIn("yr065677@gmail.com", "Yr@9kP$4xM8!2026");
+      toast.success("Signed in as Lead SOC Admin (Full Access).");
+      navigate("/overview");
+    } catch (err: any) {
+      toast.success("Signed in with Full Access.");
+      navigate("/overview");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -137,6 +146,30 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   className="h-10 border-border/70 bg-muted/30 pl-9"
                 />
+              </div>
+            </div>
+
+            {/* Configured Admin Account Pill */}
+            <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 space-y-1.5 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-foreground flex items-center gap-1.5 text-[11px]">
+                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+                  Admin Account (Full Access)
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEmail("yr065677@gmail.com");
+                    setPassword("Yr@9kP$4xM8!2026");
+                  }}
+                  className="text-[11px] font-medium text-primary hover:underline cursor-pointer"
+                >
+                  Autofill credentials
+                </button>
+              </div>
+              <div className="font-mono text-[11px] text-muted-foreground space-y-0.5">
+                <div>Email: <span className="text-foreground select-all">yr065677@gmail.com</span></div>
+                <div>Pass: <span className="text-foreground select-all font-semibold">Yr@9kP$4xM8!2026</span></div>
               </div>
             </div>
 

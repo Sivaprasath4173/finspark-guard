@@ -10,6 +10,7 @@ import {
   Radar,
   Search,
   ShieldAlert,
+  ShieldCheck,
   Wallet,
   Fingerprint,
 } from "lucide-react";
@@ -28,8 +29,7 @@ import { cn } from "@/lib/utils";
 import { useTrustLens, useUserLookup } from "@/lib/trustlens-store";
 import { EVENT_LABEL, type Alert } from "@/lib/trustlens-data";
 import { AlertDetailModal } from "@/components/trustlens/AlertDetailModal";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth, signOut } from "@/services/firebase";
+import { subscribeToAuth, signOut, type AuthSessionUser } from "@/services/firebase";
 
 const NAV = [
   { to: "/overview", label: "Overview", Icon: LayoutDashboard },
@@ -55,11 +55,10 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<AuthSessionUser | null>(null);
 
   useEffect(() => {
-    if (!auth) return;
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = subscribeToAuth((user) => {
       setCurrentUser(user);
     });
     return () => unsubscribe();
@@ -74,7 +73,24 @@ export function AppShell({ children }: { children: ReactNode }) {
     }
   };
 
-  const name = currentUser?.displayName || (currentUser?.email === "sivaprasath4173@gmail.com" ? "Siva Prasath" : currentUser?.email ? currentUser.email.split("@")[0] : "Demo Analyst");
+  const name =
+    currentUser?.displayName ||
+    (currentUser?.email === "yr065677@gmail.com"
+      ? "YR Admin"
+      : currentUser?.email === "sivaprasath4173@gmail.com"
+      ? "Siva Prasath"
+      : currentUser?.email
+      ? currentUser.email.split("@")[0]
+      : "Demo Analyst");
+
+  const role =
+    currentUser?.role ||
+    (currentUser?.email === "yr065677@gmail.com"
+      ? "Lead SOC Admin · Full Access"
+      : currentUser?.email === "sivaprasath4173@gmail.com"
+      ? "SOC Lead Analyst · Full Access"
+      : "Lead SOC Admin · Full Access");
+
   const initials = name
     .split(" ")
     .map((n) => n[0])
@@ -253,14 +269,20 @@ export function AppShell({ children }: { children: ReactNode }) {
                   <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuLabel className="font-semibold">{name}</DropdownMenuLabel>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="font-semibold flex items-center justify-between">
+                  <span>{name}</span>
+                  <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-400 border border-emerald-500/30">
+                    Full Access
+                  </span>
+                </DropdownMenuLabel>
                 <DropdownMenuLabel className="text-xs text-muted-foreground font-normal -mt-1.5 truncate">
-                  {currentUser?.email || "demo-analyst@bank.com"}
+                  {currentUser?.email || "yr065677@gmail.com"}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-xs text-muted-foreground cursor-default">
-                  Role: Tier-2 · SOC
+                <DropdownMenuItem className="text-xs text-muted-foreground cursor-default flex items-center gap-2">
+                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+                  <span>{role}</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
